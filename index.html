@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .calculator {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 420px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .inputs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 120px;
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        select {
+            width: 60px;
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            font-size: 22px;
+            border-radius: 10px;
+            background: #f3f3f3;
+            transition: 0.3s;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .calc-btn {
+            width: 100%;
+            margin-top: 10px;
+            background: #4facfe;
+            color: white;
+            font-weight: bold;
+        }
+
+        .calc-btn:hover {
+            background: #2196f3;
+        }
+
+        .keyboard {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .key {
+            background: #f0f0f0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .key:hover {
+            background: #ddd;
+        }
+
+        .active-input {
+            border-color: #4facfe;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <h1>Грязнов АДБ-23-07</h1>
+
+    <div class="inputs">
+        <input type="text" id="num1" placeholder="Число 1" readonly>
+
+        <select id="operation">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+        </select>
+
+        <input type="text" id="num2" placeholder="Число 2" readonly>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()">Посчитать</button>
+
+    <div class="result" id="result">Ответ</div>
+
+    <div class="keyboard">
+        <button class="key" onclick="addNumber(1)">1</button>
+        <button class="key" onclick="addNumber(2)">2</button>
+        <button class="key" onclick="addNumber(3)">3</button>
+
+        <button class="key" onclick="addNumber(4)">4</button>
+        <button class="key" onclick="addNumber(5)">5</button>
+        <button class="key" onclick="addNumber(6)">6</button>
+
+        <button class="key" onclick="addNumber(7)">7</button>
+        <button class="key" onclick="addNumber(8)">8</button>
+        <button class="key" onclick="addNumber(9)">9</button>
+
+        <button class="key" onclick="clearInputs()">C</button>
+        <button class="key" onclick="addNumber(0)">0</button>
+        <button class="key" onclick="deleteLast()">⌫</button>
+    </div>
+</div>
+
+<script>
+    let activeInput = document.getElementById("num1");
+
+    document.getElementById("num1").classList.add("active-input");
+
+    document.getElementById("num1").onclick = function () {
+        activeInput = this;
+        switchActive();
+    };
+
+    document.getElementById("num2").onclick = function () {
+        activeInput = this;
+        switchActive();
+    };
+
+    function switchActive() {
+        document.getElementById("num1").classList.remove("active-input");
+        document.getElementById("num2").classList.remove("active-input");
+
+        activeInput.classList.add("active-input");
+    }
+
+    function addNumber(num) {
+        activeInput.value += num;
+    }
+
+    function clearInputs() {
+        document.getElementById("num1").value = "";
+        document.getElementById("num2").value = "";
+
+        const result = document.getElementById("result");
+        result.innerText = "Ответ";
+        result.style.background = "#f3f3f3";
+        result.style.color = "black";
+    }
+
+    function deleteLast() {
+        activeInput.value = activeInput.value.slice(0, -1);
+    }
+
+    function calculate() {
+        let num1 = Number(document.getElementById("num1").value);
+        let num2 = Number(document.getElementById("num2").value);
+        let op = document.getElementById("operation").value;
+
+        let answer;
+
+        switch(op) {
+            case "+":
+                answer = num1 + num2;
+                break;
+
+            case "-":
+                answer = num1 - num2;
+                break;
+
+            case "*":
+                answer = num1 * num2;
+                break;
+
+            case "/":
+                if(num2 === 0) {
+                    answer = "Ошибка";
+                } else {
+                    answer = num1 / num2;
+                }
+                break;
+        }
+
+        const result = document.getElementById("result");
+
+        if(answer > 15) {
+            result.innerText = "число > 15";
+            result.style.background = "red";
+            result.style.color = "white";
+        } else {
+            result.innerText = answer;
+            result.style.background = "#f3f3f3";
+            result.style.color = "black";
+        }
+    }
+</script>
+
+</body>
+</html>
